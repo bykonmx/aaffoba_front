@@ -30,7 +30,9 @@ class AafoFooter extends HTMLElement {
                             <li><a href="#capacidad" class="footer__nav-link">Capacidad operativa</a></li>
                             <li><a href="#productos" class="footer__nav-link">Productos y subproductos</a></li>
                             <li><a href="#cotizacion" class="footer__nav-link">Cotización</a></li>
-                            <li><a href="/aviso-de-privacidad" class="footer__nav-link">Aviso de privacidad</a></li>
+                            <!--
+                                <li><a href="/aviso-de-privacidad" class="footer__nav-link">Aviso de privacidad</a></li>
+                            -->
                         </ul>
                     </div>
 
