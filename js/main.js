@@ -2,7 +2,28 @@
    AAFOBA - JavaScript Principal
    =================================== */
 
-document.addEventListener('DOMContentLoaded', () => {
+// Esperar a que todos los Web Components estén definidos antes de inicializar la lógica
+const componentNames = [
+    'aafo-header',
+    'aafo-hero',
+    'aafo-objective',
+    'aafo-client-card',
+    'aafo-clients',
+    'aafo-capacity-card',
+    'aafo-capacity',
+    'aafo-product-card',
+    'aafo-products',
+    'aafo-contact-cards',
+    'aafo-quote-form',
+    'aafo-footer'
+];
+
+Promise.all(componentNames.map(name => customElements.whenDefined(name)))
+    .then(() => {
+        initializeApp();
+    });
+
+function initializeApp() {
     // Elementos del DOM
     const header = document.getElementById('header');
     const navToggle = document.getElementById('nav-toggle');
@@ -226,11 +247,104 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!input.value) {
                     input.parentElement.classList.remove('focused');
                 }
+                // Validar al salir si ya tiene contenido
+                if (input.value) {
+                    validateField(input);
+                }
+            });
+
+            // Validar mientras escribe para quitar el error si ya es correcto
+            input.addEventListener('input', () => {
+                if (input.parentElement.classList.contains('error')) {
+                    validateField(input);
+                }
             });
         });
     };
 
+    const validateField = (input) => {
+        const field = input.parentElement;
+        let isValid = true;
+        let errorMessage = '';
+
+        // Limpiar errores previos
+        field.classList.remove('error');
+        const existingError = field.querySelector('.quote__error');
+        if (existingError) existingError.remove();
+
+        // Validación básica (requerido)
+        if (input.hasAttribute('required') && !input.value.trim()) {
+            isValid = false;
+            errorMessage = 'Este campo es obligatorio';
+        } 
+        // Validación de correo específica
+        else if (input.type === 'email' && input.value.trim()) {
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(input.value.trim())) {
+                isValid = false;
+                errorMessage = 'Por favor, ingresa un correo electrónico válido (ejemplo@empresa.com)';
+            }
+        }
+        // Validación de teléfono
+        else if (input.type === 'tel' && input.value.trim()) {
+            const telRegex = /^[\d\s\-\+\(\)]{7,15}$/;
+            if (!telRegex.test(input.value.trim())) {
+                isValid = false;
+                errorMessage = 'Ingresa un número de teléfono válido (7 a 15 dígitos)';
+            }
+        }
+
+        if (!isValid) {
+            field.classList.add('error');
+            const errorElement = document.createElement('span');
+            errorElement.className = 'quote__error';
+            errorElement.textContent = errorMessage;
+            errorElement.setAttribute('aria-live', 'polite');
+            field.appendChild(errorElement);
+        }
+
+        return isValid;
+    };
+
+    const initFormValidation = () => {
+        const quoteForm = document.getElementById('quote-form');
+        if (!quoteForm) return;
+
+        quoteForm.addEventListener('submit', (e) => {
+            const inputs = quoteForm.querySelectorAll('.quote__input');
+            let isFormValid = true;
+
+            inputs.forEach(input => {
+                if (!validateField(input)) {
+                    isFormValid = false;
+                }
+            });
+
+            if (!isFormValid) {
+                e.preventDefault();
+                // Hacer scroll al primer error
+                const firstError = quoteForm.querySelector('.error');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            } else {
+                // Aquí podrías manejar el envío por AJAX si lo deseas
+                // Por ahora dejamos que siga el flujo normal del formulario o mostramos éxito simulado
+                const websiteField = quoteForm.querySelector('input[name="website"]');
+                if (websiteField && websiteField.value) {
+                    e.preventDefault(); // Honeypot
+                    return;
+                }
+
+                // Simulación de éxito si el usuario prefiere SPA behavior
+                // e.preventDefault();
+                // showSuccessMessage(quoteForm);
+            }
+        });
+    };
+
     initFormAnimations();
+    initFormValidation();
 
     // ===================================
     // Animación de entrada (fade in on scroll) - Legacy
@@ -328,4 +442,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Log para confirmar carga
     console.log('AAFOBA - Sitio web cargado correctamente');
-});
+}
