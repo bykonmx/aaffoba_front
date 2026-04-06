@@ -2066,6 +2066,13 @@ h1, h2, h3, h4, h5, h6 {
         margin-bottom: 4px;
     }
 
+    .btn-download {
+        font-size: var(--font-size-sm);
+        padding: 12px 24px;
+        width: 100%;
+        max-width: 280px;
+    }
+
     /* --- Quote --- */
     .quote__row {
         grid-template-columns: 1fr;
