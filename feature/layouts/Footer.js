@@ -26,7 +26,7 @@ class AafoFooter extends HTMLElement {
                         <h4 class="footer__heading">Mercado</h4>
                         <ul class="footer__nav">
                             <li><a href="#nosotros" class="footer__nav-link">Nosotros</a></li>
-                            <li><a href="#nosotros" class="footer__nav-link">Para quién trabajamos</a></li>
+                            <li><a href="#clients" class="footer__nav-link">Para quién trabajamos</a></li>
                             <li><a href="#capacidad" class="footer__nav-link">Capacidad operativa</a></li>
                             <li><a href="#productos" class="footer__nav-link">Productos y subproductos</a></li>
                             <li><a href="#cotizacion" class="footer__nav-link">Cotización</a></li>

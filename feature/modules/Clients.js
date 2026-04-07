@@ -12,7 +12,7 @@ class AafoClients extends HTMLElement {
 
     render() {
         this.innerHTML = `
-            <section class="section clients" aria-labelledby="clients-title">
+            <section class="section clients" id="clients" aria-labelledby="clients-title">
                 <div class="container">
                     <p class="clients__pretitle fade-in">Nosotros</p>
                     <h2 class="section__title section__title--left fade-in" id="clients-title">
