@@ -15,7 +15,8 @@ const componentNames = [
     'aafo-product-card',
     'aafo-quote-form',
     'aafo-footer',
-    'aafo-privacy'
+    'aafo-privacy',
+    'aafo-not-found'
 ];
 
 // No intentar inicializar si no están todos los componentes en la página
@@ -471,4 +472,67 @@ function initializeApp() {
 
     // Log para confirmar carga
     console.log('AAFOBA - Sitio web cargado correctamente');
+
+    // ===================================
+    // Sistema de Enrutamiento Básico
+    // ===================================
+    const mainContent = document.querySelector('main');
+    const notFoundComponent = document.createElement('aafo-not-found');
+    
+    const handleRouting = () => {
+        const path = window.location.pathname;
+        const search = window.location.search; // Query params (?...)
+        let page = path.split('/').pop();
+        const hash = window.location.hash;
+        
+        // Ignorar si solo hay query params en la página principal
+        if (page === '' && search && !path.includes('fredo')) return; 
+
+        // Si hay un hash, es una navegación interna, no mostrar 404 (a menos que no estemos en una página válida)
+        if (hash && (page === '' || page === 'index.html')) return;
+
+        // Limpiar extensión .html para comparar si el usuario lo pone o no
+        const cleanPage = page.replace('.html', '');
+        
+        // Lista de páginas válidas
+        const validPages = ['', 'index', 'index.html', 'aviso-de-privacidad', 'aviso-de-privacidad.html'];
+        
+        // Determinar si es una página válida
+        const isValid = validPages.includes(page) || (page === '' && path.endsWith('/'));
+
+        if (!isValid) {
+            // Si la página no es válida, mostrar 404
+            console.warn('AAFOBA Routing: Ruta no reconocida:', path);
+            if (mainContent) {
+                // Guardar el contenido original si no se ha guardado
+                if (!window.originalMainContent) {
+                    window.originalMainContent = mainContent.innerHTML;
+                }
+                
+                mainContent.innerHTML = '';
+                mainContent.appendChild(notFoundComponent);
+                
+                // Ocultar otros elementos si es necesario (ej. Hero)
+                const hero = document.querySelector('aafo-hero');
+                if (hero) hero.style.display = 'none';
+                
+                // Scroll al inicio cuando hay 404
+                window.scrollTo(0, 0);
+            }
+        } else {
+            // Si volvemos a una página válida y estábamos en 404
+            if (window.originalMainContent && (mainContent.contains(notFoundComponent) || mainContent.innerHTML === '')) {
+                mainContent.innerHTML = window.originalMainContent;
+                const hero = document.querySelector('aafo-hero');
+                if (hero) hero.style.display = '';
+            }
+        }
+    };
+
+    // Ejecutar al cargar
+    handleRouting();
+    
+    // Escuchar cambios en la URL (para SPAs o navegación interna)
+    window.addEventListener('popstate', handleRouting);
+    window.addEventListener('hashchange', handleRouting);
 }

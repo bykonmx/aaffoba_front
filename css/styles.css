@@ -21,10 +21,11 @@
  * 11. Capacity Section
  * 12. Products Section
  * 13. Quote Section
- * 14. Footer
- * 15. Animations & Effects
- * 16. Utilities
- * 17. Media Queries
+ * 14. NotFound Section
+ * 15. Footer
+ * 16. Animations & Effects
+ * 17. Utilities
+ * 18. Media Queries
  *
  * ============================================================================
  */
@@ -1501,7 +1502,71 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ==========================================================================
-   14. FOOTER
+   14. NOTFOUND SECTION
+   ========================================================================== */
+
+.not-found {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: var(--color-light);
+    padding: var(--spacing-3xl) 0;
+}
+
+.not-found__content {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.not-found__code {
+    font-size: 8rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    line-height: 1;
+    margin-bottom: var(--spacing-sm);
+    letter-spacing: -2px;
+}
+
+.not-found__title {
+    font-size: var(--font-size-4xl);
+    color: var(--color-secondary);
+    margin-bottom: var(--spacing-md);
+}
+
+.not-found__line {
+    width: 60px;
+    height: 4px;
+    background-color: var(--color-primary);
+    margin: 0 auto var(--spacing-lg);
+}
+
+.not-found__text {
+    font-size: var(--font-size-lg);
+    color: var(--color-gray);
+    margin-bottom: var(--spacing-xl);
+    line-height: 1.6;
+}
+
+.not-found__actions {
+    display: flex;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+    .not-found__code {
+        font-size: 5rem;
+    }
+    
+    .not-found__title {
+        font-size: var(--font-size-2xl);
+    }
+}
+
+
+/* ==========================================================================
+   15. FOOTER
    ========================================================================== */
 
 .footer {
