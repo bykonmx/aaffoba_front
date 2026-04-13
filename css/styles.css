@@ -21,10 +21,11 @@
  * 11. Capacity Section
  * 12. Products Section
  * 13. Quote Section
- * 14. Footer
- * 15. Animations & Effects
- * 16. Utilities
- * 17. Media Queries
+ * 14. NotFound Section
+ * 15. Footer
+ * 16. Animations & Effects
+ * 17. Utilities
+ * 18. Media Queries
  *
  * ============================================================================
  */
@@ -290,7 +291,8 @@ h1, h2, h3, h4, h5, h6 {
     transition: all var(--transition-base);
 }
 
-.header--scrolled {
+.header--scrolled,
+.header--solid {
     background-color: var(--color-secondary);
     box-shadow: var(--shadow-md);
 }
@@ -1423,7 +1425,148 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ==========================================================================
-   14. FOOTER
+   13.5. PRIVACY SECTION
+   ========================================================================== */
+
+.privacy {
+    background-color: var(--color-light);
+}
+
+.privacy__content {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: var(--color-white);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    line-height: 1.8;
+    color: var(--color-secondary);
+}
+
+.privacy__intro {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-dark);
+}
+
+.privacy__subtitle {
+    font-size: var(--font-size-xl);
+    color: var(--color-primary);
+    margin-top: var(--spacing-xl);
+    margin-bottom: var(--spacing-md);
+    font-weight: 700;
+    border-left: 4px solid var(--color-primary);
+    padding-left: var(--spacing-sm);
+}
+
+.privacy__content p {
+    margin-bottom: var(--spacing-md);
+}
+
+.privacy__list {
+    list-style: none;
+    padding-left: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.privacy__list li {
+    position: relative;
+    padding-left: var(--spacing-lg);
+    margin-bottom: var(--spacing-sm);
+}
+
+.privacy__list li::before {
+    content: '•';
+    color: var(--color-primary);
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+.privacy__link {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color var(--transition-fast);
+}
+
+.privacy__link:hover {
+    color: var(--color-primary-dark);
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .privacy__content {
+        padding: var(--spacing-lg);
+    }
+}
+
+/* ==========================================================================
+   14. NOTFOUND SECTION
+   ========================================================================== */
+
+.not-found {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: var(--color-light);
+    padding: var(--spacing-3xl) 0;
+}
+
+.not-found__content {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.not-found__code {
+    font-size: 8rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    line-height: 1;
+    margin-bottom: var(--spacing-sm);
+    letter-spacing: -2px;
+}
+
+.not-found__title {
+    font-size: var(--font-size-4xl);
+    color: var(--color-secondary);
+    margin-bottom: var(--spacing-md);
+}
+
+.not-found__line {
+    width: 60px;
+    height: 4px;
+    background-color: var(--color-primary);
+    margin: 0 auto var(--spacing-lg);
+}
+
+.not-found__text {
+    font-size: var(--font-size-lg);
+    color: var(--color-gray);
+    margin-bottom: var(--spacing-xl);
+    line-height: 1.6;
+}
+
+.not-found__actions {
+    display: flex;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+    .not-found__code {
+        font-size: 5rem;
+    }
+    
+    .not-found__title {
+        font-size: var(--font-size-2xl);
+    }
+}
+
+
+/* ==========================================================================
+   15. FOOTER
    ========================================================================== */
 
 .footer {

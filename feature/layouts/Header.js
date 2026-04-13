@@ -11,29 +11,33 @@ class AafoHeader extends HTMLElement {
     }
 
     render() {
+        const isPrivacyPage = window.location.pathname.includes('aviso-de-privacidad.html');
+        const baseUrl = isPrivacyPage ? 'index.html' : '';
+        const headerClass = isPrivacyPage ? 'header header--solid' : 'header';
+
         this.innerHTML = `
-            <header class="header" id="header">
+            <header class="${headerClass}" id="header">
                 <nav class="nav container" aria-label="Navegación principal">
-                    <a href="#inicio" class="nav__logo" aria-label="AAFOBA - Ir al inicio">
+                    <a href="${baseUrl}#inicio" class="nav__logo" aria-label="AAFOBA - Ir al inicio">
                         <img src="Images/logo.png" alt="AAFOBA Logo" class="nav__logo-img" width="348" height="64">
                     </a>
 
                     <div class="nav__menu" id="nav-menu" role="navigation">
                         <ul class="nav__list">
                             <li class="nav__item">
-                                <a href="#inicio" class="nav__link active">Inicio</a>
+                                <a href="${baseUrl}#inicio" class="nav__link ${isPrivacyPage ? '' : 'active'}">Inicio</a>
                             </li>
                             <li class="nav__item">
-                                <a href="#nosotros" class="nav__link">Nosotros</a>
+                                <a href="${baseUrl}#nosotros" class="nav__link">Nosotros</a>
                             </li>
                             <li class="nav__item">
-                                <a href="#capacidad" class="nav__link">Capacidad</a>
+                                <a href="${baseUrl}#capacidad" class="nav__link">Capacidad</a>
                             </li>
                             <li class="nav__item">
-                                <a href="#productos" class="nav__link">Productos</a>
+                                <a href="${baseUrl}#productos" class="nav__link">Productos</a>
                             </li>
                             <li class="nav__item">
-                                <a href="#cotizacion" class="nav__link nav__link--cta">Cotización</a>
+                                <a href="${baseUrl}#cotizacion" class="nav__link nav__link--cta">Cotización</a>
                             </li>
                         </ul>
                     </div>

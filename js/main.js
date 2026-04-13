@@ -7,28 +7,44 @@ const componentNames = [
     'aafo-header',
     'aafo-hero',
     'aafo-objective',
-    'aafo-client-card',
     'aafo-clients',
-    'aafo-capacity-card',
+    'aafo-client-card',
     'aafo-capacity',
-    'aafo-product-card',
+    'aafo-capacity-card',
     'aafo-products',
-    'aafo-contact-cards',
+    'aafo-product-card',
     'aafo-quote-form',
-    'aafo-footer'
+    'aafo-footer',
+    'aafo-privacy',
+    'aafo-not-found'
 ];
 
-Promise.all(componentNames.map(name => customElements.whenDefined(name)))
-    .then(() => {
-        initializeApp();
-    });
+// No intentar inicializar si no están todos los componentes en la página
+const availableComponents = componentNames.filter(name => document.querySelector(name));
+if (availableComponents.length === 0) {
+    initializeApp();
+} else {
+    Promise.all(availableComponents.map(name => customElements.whenDefined(name)))
+        .then(() => {
+            initializeApp();
+        });
+}
 
 function initializeApp() {
     // Elementos del DOM
-    const header = document.getElementById('header');
-    const navToggle = document.getElementById('nav-toggle');
-    const navMenu = document.getElementById('nav-menu');
+    const header = document.getElementById('header') || document.querySelector('aafo-header')?.shadowRoot?.getElementById('header') || document.querySelector('aafo-header header');
+    
+    // Si no hay header, intentamos buscar de nuevo en un momento (por si los componentes tardan en renderizar)
+    if (!header) {
+        console.warn('Header no encontrado al inicio, reintentando...');
+        setTimeout(initializeApp, 100);
+        return;
+    }
+
+    const navToggle = document.getElementById('nav-toggle') || header.querySelector('#nav-toggle');
+    const navMenu = document.getElementById('nav-menu') || header.querySelector('#nav-menu');
     const navLinks = document.querySelectorAll('.nav__link');
+    const allLinks = document.querySelectorAll('a[href]');
 
     // ===================================
     // Header scroll effect
@@ -48,6 +64,7 @@ function initializeApp() {
     // Mobile menu toggle
     // ===================================
     const toggleMenu = () => {
+        if (!navMenu || !navToggle) return;
         navMenu.classList.toggle('active');
         navToggle.classList.toggle('active');
         document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
@@ -60,7 +77,7 @@ function initializeApp() {
     // Cerrar menú al hacer clic en un enlace
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
-            if (navMenu.classList.contains('active')) {
+            if (navMenu && navMenu.classList.contains('active')) {
                 toggleMenu();
             }
         });
@@ -84,7 +101,7 @@ function initializeApp() {
 
                 navLinks.forEach(link => {
                     link.classList.remove('active');
-                    if (link.getAttribute('href') === `#${id}`) {
+                    if (link.getAttribute('href') === `#${id}` || link.getAttribute('href') === `index.html#${id}`) {
                         link.classList.add('active');
                     }
                 });
@@ -101,15 +118,25 @@ function initializeApp() {
     // ===================================
     // Smooth scroll para navegación
     // ===================================
-    navLinks.forEach(link => {
+    allLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             const href = link.getAttribute('href');
-
-            if (href.startsWith('#')) {
-                e.preventDefault();
-                const targetSection = document.querySelector(href);
-
+            if (!href) return;
+            
+            const url = new URL(link.href);
+            const currentPath = window.location.pathname.replace(/\/$/, '') || '/index.html';
+            const targetPath = url.pathname.replace(/\/$/, '') || '/index.html';
+            
+            const isHomePage = currentPath.endsWith('index.html') || currentPath === '/';
+            const targetsHomePage = targetPath.endsWith('index.html') || targetPath === '/';
+            
+            const isSamePage = currentPath === targetPath || (isHomePage && targetsHomePage);
+            
+            if (isSamePage && url.hash) {
+                const targetId = decodeURIComponent(url.hash.substring(1));
+                const targetSection = document.getElementById(targetId);
                 if (targetSection) {
+                    e.preventDefault();
                     const headerHeight = header.offsetHeight;
                     const targetPosition = targetSection.offsetTop - headerHeight;
 
@@ -136,14 +163,17 @@ function initializeApp() {
                 }
             });
         }, {
-            threshold: 0.15,
+            threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
         });
 
         animatedElements.forEach(el => animateObserver.observe(el));
     };
 
+    // Re-ejecutar animaciones después de un tiempo para asegurar que los componentes hijos se renderizaron
     initScrollAnimations();
+    setTimeout(initScrollAnimations, 500);
+    setTimeout(initScrollAnimations, 1500);
 
     // ===================================
     // Parallax effect on hero background
@@ -373,7 +403,7 @@ function initializeApp() {
     // Cerrar menú móvil con tecla Escape
     // ===================================
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+        if (e.key === 'Escape' && navMenu && navMenu.classList.contains('active')) {
             toggleMenu();
         }
     });
@@ -382,7 +412,7 @@ function initializeApp() {
     // Prevenir scroll cuando menú móvil está abierto
     // ===================================
     const preventScroll = (e) => {
-        if (navMenu.classList.contains('active')) {
+        if (navMenu && navMenu.classList.contains('active')) {
             e.preventDefault();
         }
     };
@@ -442,4 +472,67 @@ function initializeApp() {
 
     // Log para confirmar carga
     console.log('AAFOBA - Sitio web cargado correctamente');
+
+    // ===================================
+    // Sistema de Enrutamiento Básico
+    // ===================================
+    const mainContent = document.querySelector('main');
+    const notFoundComponent = document.createElement('aafo-not-found');
+    
+    const handleRouting = () => {
+        const path = window.location.pathname;
+        const search = window.location.search; // Query params (?...)
+        let page = path.split('/').pop();
+        const hash = window.location.hash;
+        
+        // Ignorar si solo hay query params en la página principal
+        if (page === '' && search && !path.includes('fredo')) return; 
+
+        // Si hay un hash, es una navegación interna, no mostrar 404 (a menos que no estemos en una página válida)
+        if (hash && (page === '' || page === 'index.html')) return;
+
+        // Limpiar extensión .html para comparar si el usuario lo pone o no
+        const cleanPage = page.replace('.html', '');
+        
+        // Lista de páginas válidas
+        const validPages = ['', 'index', 'index.html', 'aviso-de-privacidad', 'aviso-de-privacidad.html'];
+        
+        // Determinar si es una página válida
+        const isValid = validPages.includes(page) || (page === '' && path.endsWith('/'));
+
+        if (!isValid) {
+            // Si la página no es válida, mostrar 404
+            console.warn('AAFOBA Routing: Ruta no reconocida:', path);
+            if (mainContent) {
+                // Guardar el contenido original si no se ha guardado
+                if (!window.originalMainContent) {
+                    window.originalMainContent = mainContent.innerHTML;
+                }
+                
+                mainContent.innerHTML = '';
+                mainContent.appendChild(notFoundComponent);
+                
+                // Ocultar otros elementos si es necesario (ej. Hero)
+                const hero = document.querySelector('aafo-hero');
+                if (hero) hero.style.display = 'none';
+                
+                // Scroll al inicio cuando hay 404
+                window.scrollTo(0, 0);
+            }
+        } else {
+            // Si volvemos a una página válida y estábamos en 404
+            if (window.originalMainContent && (mainContent.contains(notFoundComponent) || mainContent.innerHTML === '')) {
+                mainContent.innerHTML = window.originalMainContent;
+                const hero = document.querySelector('aafo-hero');
+                if (hero) hero.style.display = '';
+            }
+        }
+    };
+
+    // Ejecutar al cargar
+    handleRouting();
+    
+    // Escuchar cambios en la URL (para SPAs o navegación interna)
+    window.addEventListener('popstate', handleRouting);
+    window.addEventListener('hashchange', handleRouting);
 }
