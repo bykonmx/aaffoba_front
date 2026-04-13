@@ -11,6 +11,9 @@ class AafoFooter extends HTMLElement {
     }
 
     render() {
+        const isPrivacyPage = window.location.pathname.includes('aviso-de-privacidad.html');
+        const baseUrl = isPrivacyPage ? 'index.html' : '';
+
         this.innerHTML = `
             <footer class="footer" role="contentinfo">
                 <div class="footer__main container">
@@ -25,14 +28,12 @@ class AafoFooter extends HTMLElement {
                     <div class="footer__column">
                         <h4 class="footer__heading">Mercado</h4>
                         <ul class="footer__nav">
-                            <li><a href="#nosotros" class="footer__nav-link">Nosotros</a></li>
-                            <li><a href="#clients" class="footer__nav-link">Para quién trabajamos</a></li>
-                            <li><a href="#capacidad" class="footer__nav-link">Capacidad operativa</a></li>
-                            <li><a href="#productos" class="footer__nav-link">Productos y subproductos</a></li>
-                            <li><a href="#cotizacion" class="footer__nav-link">Cotización</a></li>
-                            <!--
-                                <li><a href="/aviso-de-privacidad" class="footer__nav-link">Aviso de privacidad</a></li>
-                            -->
+                            <li><a href="${baseUrl}#nosotros" class="footer__nav-link">Nosotros</a></li>
+                            <li><a href="${baseUrl}#clients" class="footer__nav-link">Para quién trabajamos</a></li>
+                            <li><a href="${baseUrl}#capacidad" class="footer__nav-link">Capacidad operativa</a></li>
+                            <li><a href="${baseUrl}#productos" class="footer__nav-link">Productos y subproductos</a></li>
+                            <li><a href="${baseUrl}#cotizacion" class="footer__nav-link">Cotización</a></li>
+                            <li><a href="aviso-de-privacidad.html" class="footer__nav-link">Aviso de privacidad</a></li>
                         </ul>
                     </div>
 
