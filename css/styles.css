@@ -913,21 +913,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .products__grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: var(--spacing-sm);
-}
-
-/* Últimas 3 cards (fila 2) centradas en el grid de 4 columnas */
-.products__grid .products__card:nth-child(5) {
-    grid-column: 1;
-}
-
-.products__grid .products__card:nth-child(6) {
-    grid-column: 2;
-}
-
-.products__grid .products__card:nth-child(7) {
-    grid-column: 3;
 }
 
 /* --- Card base --- */
