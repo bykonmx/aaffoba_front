@@ -38,6 +38,27 @@ class AafoProducts extends HTMLElement {
                             delay="2" 
                             features="Grasa animal funcional|Opción eficiente|Nutrición animal">
                         </aafo-product-card>
+                        
+                        <aafo-product-card 
+                            title="Estearina de Palma RBD" 
+                            image="Images/estearina-palma.png" 
+                            delay="1" 
+                            features="Subproducto cristalizado|Textura y estabilidad|Uso cosmético y alimenticio">
+                        </aafo-product-card>
+
+                        <aafo-product-card 
+                            title="Manteca de Cerdo" 
+                            image="Images/manteca-cerdo.png" 
+                            delay="2" 
+                            features="Grasa animal fundida|Energía concentrada|Mejora palatabilidad">
+                        </aafo-product-card>
+
+                        <aafo-product-card 
+                            title="Aceite de Pollo" 
+                            image="Images/aceite-pollo.png" 
+                            delay="3" 
+                            features="Extracto de vísceras|Proceso de prensado|Nutrición aviar de alta calidad">
+                        </aafo-product-card>
 
                         <aafo-product-card 
                             title="Grasa Amarilla" 
